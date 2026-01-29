@@ -17,22 +17,20 @@ dotenv.config();
 const app = express();
 
 /* =========================
-   ✅ CORS FIX (IMPORTANT)
+   ✅ CORS CONFIG (FIXED)
 ========================= */
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173", // local dev
-      "https://noumannote.netlify.app", // production frontend
-    ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  }),
-);
+const corsOptions = {
+  origin: ["http://localhost:5173", "https://noumannote.netlify.app"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
 
-// preflight fix
-app.options("*", cors());
+app.use(cors(corsOptions));
+
+/* ✅ Preflight handled automatically by cors middleware
+   ❌ DO NOT use app.options("*")
+*/
 
 app.use(express.json());
 app.use(cookieParser());
@@ -54,12 +52,11 @@ app.get("/", (req, res) => {
 const server = http.createServer(app);
 
 /* =========================
-   ✅ SOCKET.IO FIX
+   ✅ SOCKET.IO CONFIG
 ========================= */
 const io = new Server(server, {
   cors: {
     origin: ["http://localhost:5173", "https://noumannote.netlify.app"],
-    methods: ["GET", "POST"],
     credentials: true,
   },
 });
