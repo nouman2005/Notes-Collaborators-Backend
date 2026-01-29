@@ -5,44 +5,61 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import http from "http";
 import { Server } from "socket.io";
+
 import userRoutes from "./Routes/userRoutes.js";
 import noteRoutes from "./Routes/noteRoutes.js";
 import collaboratorRoutes from "./Routes/collaboratorRoutes.js";
 import activeRoutes from "./Routes/activeRoutes.js";
-
-// import ConnectDB from "./Config/db.js";
 import socketHandler from "./config/socket.js";
 
 dotenv.config();
 
 const app = express();
 
+/* =========================
+   ✅ CORS FIX (IMPORTANT)
+========================= */
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: [
+      "http://localhost:5173", // local dev
+      "https://noumannote.netlify.app", // production frontend
+    ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
+
+// preflight fix
+app.options("*", cors());
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
+/* =========================
+   Routes
+========================= */
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/notes", noteRoutes);
 app.use("/api/v1/collaborator", collaboratorRoutes);
 app.use("/api/v1/active", activeRoutes);
 
 app.get("/", (req, res) => {
-  res.send("<h1>SuccessFully Connected</h1>");
+  res.send("<h1>Successfully Connected 🚀</h1>");
 });
 
 const server = http.createServer(app);
 
+/* =========================
+   ✅ SOCKET.IO FIX
+========================= */
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "https://noumannote.netlify.app"],
+    methods: ["GET", "POST"],
     credentials: true,
   },
 });
