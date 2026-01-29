@@ -11,7 +11,7 @@ import collaboratorRoutes from "./Routes/collaboratorRoutes.js";
 import activeRoutes from "./Routes/activeRoutes.js";
 
 // import ConnectDB from "./Config/db.js";
-import socketHandler from "./Config/socket.js";
+import socketHandler from "./config/socket.js";
 
 dotenv.config();
 
