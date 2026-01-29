@@ -10,7 +10,7 @@ import noteRoutes from "./Routes/noteRoutes.js";
 import collaboratorRoutes from "./Routes/collaboratorRoutes.js";
 import activeRoutes from "./Routes/activeRoutes.js";
 
-import ConnectDB from "./Config/db.js";
+// import ConnectDB from "./Config/db.js";
 import socketHandler from "./Config/socket.js";
 
 dotenv.config();
